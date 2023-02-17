@@ -1,4 +1,6 @@
 import User.User;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import tools.UserClientSpec;
 import User.UserGenerator;
 import io.qameta.allure.junit4.DisplayName;
@@ -7,6 +9,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import pages.*;
+
+import static org.junit.Assert.assertTrue;
 import static tools.URLs.*;
 import static org.junit.Assert.assertEquals;
 import static tools.URLs.URL;
@@ -20,8 +24,10 @@ public class LoginTest  extends TestSetUp {
     private MainPage mainPage;
     private HeaderMainPage headerMainPage;
     private User user;
-    private UserClientSpec UserClientSpec;
+    private UserClientSpec userClientSpec;
     private String token;
+
+    private By createOrderButton = By.xpath("//button[text()='Оформить заказ']");
 
 
     @Before
@@ -29,18 +35,19 @@ public class LoginTest  extends TestSetUp {
         super.setUp();
         driver.get(URL);
         user = UserGenerator.getUser();
-        UserClientSpec = new UserClientSpec();
-        ValidatableResponse createResponse = UserClientSpec.create(user);
+        userClientSpec = new UserClientSpec();
+        ValidatableResponse createResponse = userClientSpec.create(user);
         token = createResponse.extract().path("accessToken");
+        registrationPage = new RegistrationPage(driver);
+        loginSteps = new LoginSteps(driver, authorizationPage, registrationPage);
+        authorizationPage = new AuthorizationPage(driver, passwordRecoveryPage, loginSteps);
+        mainPage = new MainPage(driver, authorizationPage);
+        headerMainPage = new HeaderMainPage(driver);
     }
 
     @Test
     @DisplayName("Main page authorization")
     public void checkLoginFromMainPage() {
-        registrationPage = new RegistrationPage(driver);
-        loginSteps = new LoginSteps(driver, authorizationPage, registrationPage);
-        authorizationPage = new AuthorizationPage(driver, passwordRecoveryPage, loginSteps);
-        mainPage = new MainPage(driver, authorizationPage);
 
         mainPage.clickLoginButton();
         authorizationPage.userAuthorization(user.getEmail(), user.getPassword());
@@ -55,11 +62,6 @@ public class LoginTest  extends TestSetUp {
     @Test
     @DisplayName("Authorization from account screen")
     public void checkLoginFromAccountScreen() {
-        headerMainPage = new HeaderMainPage(driver);
-        registrationPage = new RegistrationPage(driver);
-        loginSteps = new LoginSteps(driver, authorizationPage, registrationPage);
-        authorizationPage = new AuthorizationPage(driver, passwordRecoveryPage, loginSteps);
-        mainPage = new MainPage(driver, authorizationPage);
 
         headerMainPage.clickAccountButton();
         authorizationPage.waitForTitleLoginPage();
@@ -75,11 +77,6 @@ public class LoginTest  extends TestSetUp {
     @Test
     @DisplayName("Authorization from registration page")
     public void checkLoginFromRegistrationPage() {
-        headerMainPage = new HeaderMainPage(driver);
-        registrationPage = new RegistrationPage(driver);
-        loginSteps = new LoginSteps(driver, authorizationPage, registrationPage);
-        authorizationPage = new AuthorizationPage(driver, passwordRecoveryPage, loginSteps);
-        mainPage = new MainPage(driver, authorizationPage);
 
         driver.get(REGISTRATION_PATH);
         registrationPage.waitForTitleRegistration();
@@ -98,11 +95,7 @@ public class LoginTest  extends TestSetUp {
     @DisplayName("Authorization from password recovery page")
     public void checkLoginFromPasswordRecoveryScreen() {
         passwordRecoveryPage = new PasswordRecoveryPage(driver);
-        headerMainPage = new HeaderMainPage(driver);
-        registrationPage = new RegistrationPage(driver);
-        loginSteps = new LoginSteps(driver, authorizationPage, registrationPage);
         authorizationPage = new AuthorizationPage(driver, passwordRecoveryPage, loginSteps);
-        mainPage = new MainPage(driver, authorizationPage);
 
         driver.get(LOGIN_PATH);
         authorizationPage.waitForTitleLoginPage();
@@ -117,12 +110,17 @@ public class LoginTest  extends TestSetUp {
         String actualUrlLogin = driver.getCurrentUrl();
 
         assertEquals(expectedUrlLogin, actualUrlLogin);
+
+        WebElement orderButton = driver.findElement(By.xpath("//button[text()='Оформить заказ']"));
+        boolean orderButtonIsVisible = orderButton.isDisplayed();
+
+        assertTrue(orderButtonIsVisible);
     }
 
     @After
     public void cleanUp() {
         if ( token != null) {
-            UserClientSpec.delete(token);
+            userClientSpec.delete(token);
         }
     }
 }

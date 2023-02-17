@@ -7,8 +7,7 @@ import pages.LoginSteps;
 import pages.PasswordRecoveryPage;
 import pages.RegistrationPage;
 import static org.junit.Assert.assertEquals;
-import static tools.URLs.LOGIN_PATH;
-import static tools.URLs.REGISTRATION_PATH;
+import static tools.URLs.*;
 
 public class RegistrationTest extends TestSetUp {
 
@@ -24,15 +23,15 @@ public class RegistrationTest extends TestSetUp {
         super.setUp();
         driver.get(REGISTRATION_PATH);
         user = UserGenerator.getUser();
+        registrationPage = new RegistrationPage(driver);
+        loginSteps = new LoginSteps(driver, authorizationPage, registrationPage);
+        passwordRecoveryPage = new PasswordRecoveryPage(driver);
+        authorizationPage = new AuthorizationPage(driver, passwordRecoveryPage, loginSteps);
     }
 
     @Test
     @DisplayName("Checking successful registration")
     public void checkRegistrationIsSuccessful() {
-        registrationPage = new RegistrationPage(driver);
-        loginSteps = new LoginSteps(driver, authorizationPage, registrationPage);
-        passwordRecoveryPage = new PasswordRecoveryPage(driver);
-        authorizationPage = new AuthorizationPage(driver, passwordRecoveryPage, loginSteps);
 
         loginSteps.registrationUser(user.getName(), user.getEmail(), user.getPassword());
         authorizationPage.waitForTitleLoginPage();
@@ -46,10 +45,6 @@ public class RegistrationTest extends TestSetUp {
     @Test
     @DisplayName("Check registration with password less than 6 symbols")
     public void checkRegistrationUnableWithPasswordLessSixSymbols() {
-        registrationPage = new RegistrationPage(driver);
-        loginSteps = new LoginSteps(driver, authorizationPage, registrationPage);
-        passwordRecoveryPage = new PasswordRecoveryPage(driver);
-        authorizationPage = new AuthorizationPage(driver, passwordRecoveryPage, loginSteps);
 
         loginSteps.registrationUser(user.getName(), user.getEmail(), "1234a");
 

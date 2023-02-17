@@ -18,11 +18,10 @@ public class SwitchToAccountTest extends TestSetUp {
     private AuthorizationPage authorizationPage;
     private LoginSteps loginSteps;
     private RegistrationPage registrationPage;
-    private PasswordRecoveryPage passwordRecoveryPage;
     private MainPage mainPage;
     private HeaderMainPage headerMainPage;
     private User user;
-    private UserClientSpec UserClientSpec;
+    private UserClientSpec userClientSpec;
     private String token;
 
     @Before
@@ -30,20 +29,20 @@ public class SwitchToAccountTest extends TestSetUp {
         super.setUp();
         driver.get(LOGIN_PATH);
         user = UserGenerator.getUser();
-        UserClientSpec = new UserClientSpec();
-        ValidatableResponse createResponse = UserClientSpec.create(user);
+        userClientSpec = new UserClientSpec();
+        ValidatableResponse createResponse = userClientSpec.create(user);
         token = createResponse.extract().path("accessToken");
+        profilePage = new ProfilePage(driver);
+        headerMainPage = new HeaderMainPage(driver);
+        registrationPage = new RegistrationPage(driver);
+        loginSteps = new LoginSteps(driver, authorizationPage, registrationPage);
+        authorizationPage = new AuthorizationPage(driver, loginSteps);
+        mainPage = new MainPage(driver, authorizationPage);
     }
 
     @Test
     @DisplayName("Switch to Account via profile button click")
     public void checkSwitchToAccountViaProfileButton() {
-        profilePage = new ProfilePage(driver);
-        headerMainPage = new HeaderMainPage(driver);
-        registrationPage = new RegistrationPage(driver);
-        loginSteps = new LoginSteps(driver, authorizationPage, registrationPage);
-        authorizationPage = new AuthorizationPage(driver, passwordRecoveryPage, loginSteps);
-        mainPage = new MainPage(driver, authorizationPage);
 
         authorizationPage.waitForTitleLoginPage();
         authorizationPage.userAuthorization(user.getEmail(), user.getPassword());
@@ -63,7 +62,7 @@ public class SwitchToAccountTest extends TestSetUp {
     @After
     public void cleanUp() {
         if ( token != null) {
-            UserClientSpec.delete(token);
+            userClientSpec.delete(token);
         }
     }
 }

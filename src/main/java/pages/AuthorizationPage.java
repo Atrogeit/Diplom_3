@@ -21,6 +21,11 @@ public class AuthorizationPage {
         this.loginSteps = loginSteps;
     }
 
+    public AuthorizationPage(WebDriver driver, LoginSteps loginSteps) {
+        this.driver = driver;
+        this.loginSteps = loginSteps;
+    }
+
     //Шаги
     @Step("Click on login button")
     public void clickOnLoginButton() {
