@@ -57,6 +57,11 @@ public class LoginTest  extends TestSetUp {
         String actualUrlLogin = driver.getCurrentUrl();
 
         assertEquals(expectedUrlLogin, actualUrlLogin);
+
+        WebElement orderButton = driver.findElement(By.xpath("//button[text()='Оформить заказ']"));
+        boolean orderButtonIsVisible = orderButton.isDisplayed();
+
+        assertTrue(orderButtonIsVisible);
     }
 
     @Test
@@ -110,11 +115,6 @@ public class LoginTest  extends TestSetUp {
         String actualUrlLogin = driver.getCurrentUrl();
 
         assertEquals(expectedUrlLogin, actualUrlLogin);
-
-        WebElement orderButton = driver.findElement(By.xpath("//button[text()='Оформить заказ']"));
-        boolean orderButtonIsVisible = orderButton.isDisplayed();
-
-        assertTrue(orderButtonIsVisible);
     }
 
     @After
