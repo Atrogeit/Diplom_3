@@ -13,8 +13,10 @@ public class MainPage{
     public By loginButton = By.xpath("//button[text()='Войти в аккаунт']");
     public By createOrderButton = By.xpath("//button[text()='Оформить заказ']");
     public By constructorTabTitle = By.xpath("//h1[text()='Соберите бургер']");
-    public String constructorIngredientTab = "//section[contains(@class, 'BurgerIngredients')]//span[text()='%s']";
-    public String ingredientsTitleConstructor = "//h2[contains(text(), '%s')]";
+    public By bunsTab = By.xpath(".//span[@class = 'text text_type_main-default' and text() = 'Булки']");
+
+    public By sauceTab = By.xpath(".//span[@class = 'text text_type_main-default' and text() = 'Соусы']");
+    public By fillingsTab = By.xpath(".//span[@class = 'text text_type_main-default' and text() = 'Начинки']");
 
 
     public MainPage(WebDriver driver, AuthorizationPage authorizationPage) {
@@ -35,9 +37,19 @@ public class MainPage{
         authorizationPage.waitForTitleLoginPage();
     }
 
-    @Step("Constructor tab click")
-    public void clickTabConstructor(String ingredient) {
-        driver.findElement(By.xpath(String.format(constructorIngredientTab, ingredient))).click();
+    @Step("bunsTab is clicked")
+    public void clickBunsTab(){
+        driver.findElement(bunsTab).click();
+    }
+
+    @Step("sauceTab is clicked")
+    public void clickSauceTab(){
+        driver.findElement(sauceTab).click();
+    }
+
+    @Step("fillingsTab is clicked")
+    public void clickFillingsTab(){
+        driver.findElement(fillingsTab).click();
     }
 
 }
