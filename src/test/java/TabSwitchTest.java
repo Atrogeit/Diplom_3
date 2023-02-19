@@ -6,6 +6,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import pages.*;
 
+import static org.junit.Assert.assertTrue;
 import static tools.URLs.URL;
 
 public class TabSwitchTest extends TestSetUp {
@@ -33,7 +34,8 @@ public class TabSwitchTest extends TestSetUp {
         mainPage.clickBunsTab();
         //Тут идет проверка по элементу, в случае, если выбрана не та вкладка, то тест упадет на поиске элемента
         WebElement  bunTabIsCurrent = driver.findElement(By.xpath(".//div[@class= 'tab_tab__1SPyG tab_tab_type_current__2BEPc pt-4 pr-10 pb-4 pl-10 noselect']/span[@class = 'text text_type_main-default' and text() = 'Булки']"));
-
+        boolean bunTabIsVisible = bunTabIsCurrent.isDisplayed();
+        assertTrue(bunTabIsVisible);
     }
 
     @Test
@@ -44,7 +46,8 @@ public class TabSwitchTest extends TestSetUp {
         mainPage.clickSauceTab();
         //Тут идет проверка по элементу, в случае, если выбрана не та вкладка, то тест упадет на поиске элемента
         WebElement  sauceTabIsCurrent = driver.findElement(By.xpath(".//div[@class= 'tab_tab__1SPyG tab_tab_type_current__2BEPc pt-4 pr-10 pb-4 pl-10 noselect']/span[@class = 'text text_type_main-default' and text() = 'Соусы']"));
-
+        boolean sauceTabIsVisible = sauceTabIsCurrent.isDisplayed();
+        assertTrue(sauceTabIsVisible);
     }
 
     @Test
@@ -55,6 +58,7 @@ public class TabSwitchTest extends TestSetUp {
         mainPage.clickFillingsTab();
         //Тут идет проверка по элементу, в случае, если выбрана не та вкладка, то тест упадет на поиске элемента
         WebElement  fillingsTabIsCurrent = driver.findElement(By.xpath(".//div[@class= 'tab_tab__1SPyG tab_tab_type_current__2BEPc pt-4 pr-10 pb-4 pl-10 noselect']/span[@class = 'text text_type_main-default' and text() = 'Начинки']"));
-
+        boolean fillingTabIsVisible = fillingsTabIsCurrent.isDisplayed();
+        assertTrue(fillingTabIsVisible);
     }
 }
